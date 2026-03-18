@@ -7,7 +7,7 @@ int main() {
     if (scanf("%d", &N) != 1) return 1;
     printf("Matrix_size_2 = ");
     if (scanf("%d", &M) != 1) return 1;
-    double plus[N][N], minus[N][N], multiply[N][N], plus_1[M][M], minus_1[M][M], multiply_1[M][M];
+    double plus[N][N], plus_1[M][M];
     
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
