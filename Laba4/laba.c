@@ -14,7 +14,10 @@ int main()
 	printf ("c=");
 	scanf ("%Lf", &c);
 		
-	myFunction (a, b, c);
+	Kvadrat (a, b, c);
+	Perimetr (a; b; c);
+	Check (a; b; c);
+	
 			
 	return 0;
 }
