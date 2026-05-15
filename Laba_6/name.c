@@ -12,6 +12,7 @@ int main() {
     while (fscanf(fin, "%63s %63s %63s %d", familyname, name, ochestvo, &year) == 4) {
         if (year > 1980) {
             fprintf(fout, "%s %s %s %d\n", familyname, name, ochestvo, year);
+            printf("%s %s %s %d\n", familyname, name, ochestvo, year);
         }
     }
 
