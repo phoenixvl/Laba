@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct humen {
+   char name[50];
+   char surname[50];
+   int year;
+};
+
+int main() {
+   struct humen source[100];
+   struct humen sorted[100];
+   int count = 0;
+
+   FILE *fin = fopen("text.txt", "r");
+
+  
+   while (fscanf(fin, "%s %s %d", source[count].name, source[count].surname, &source[count].year) == 3) {
+      count++; 
+   }
+   
+   for (int i = 0; i < count; i++) {
+      sorted[i] = source[i];
+   }
+
+   
+   for (int i = 0; i < count - 1; i++) {
+      for (int j = 0; j < count - 1 - i; j++) {
+         if (sorted[j].year > sorted[j + 1].year) {
+            struct humen temp = sorted[j];
+            sorted[j] = sorted[j + 1];
+            sorted[j + 1] = temp;
+         }
+      }
+   }
+
+   printf("\nresult:\n");
+     for (int i = 0; i < count; i++) {
+      printf("%s %s, %d\n", sorted[i].name, sorted[i].surname, sorted[i].year);
+   }
+   
+   fclose(fin);
+   
+   return 0;
+}
