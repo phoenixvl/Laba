@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct {
+    char first_name[50];
+    char last_name[50];
+    int  birth_year;
+    char gender[8];
+    float height;
+} Person;
+
+Person people[100];
+int count = 0;
+int sort_keys[4];
+int sort_count = 0;
+
+int compare(const void *a, const void *b) {
+    Person *p = (Person *)a;
+    Person *q = (Person *)b;
+    for (int i = 0; i < sort_count; i++) {
+        int cmp = 0;
+        if      (sort_keys[i] == 1) cmp = strcmp(p->first_name, q->first_name);
+        else if (sort_keys[i] == 2) cmp = strcmp(p->last_name,  q->last_name);
+        else if (sort_keys[i] == 3) cmp = p->birth_year - q->birth_year;
+        else if (sort_keys[i] == 4) cmp = strcmp(p->gender, q->gender);
+        else if (sort_keys[i] == 5) cmp = (p->height > q->height) - (p->height < q->height);
+        if (cmp != 0) return cmp;
+    }
+    return 0;
+}
+
+int main() {
+    FILE *f = fopen("people.txt", "r");
+    while (fscanf(f, "%s %s %d %s %f",
+        people[count].first_name, people[count].last_name,
+        &people[count].birth_year, people[count].gender,
+        &people[count].height) == 5) count++;
+    fclose(f);
+
+    printf("Поля: 1-Имя  2-Фамилия  3-Год  4-Пол  5-Рост  0-стоп\n");
+    int k;
+    while (scanf("%d", &k) && k != 0)
+        sort_keys[sort_count++] = k;
+
+    qsort(people, count, sizeof(Person), compare);
+
+    printf("\n%-15s %-15s %-6s %-5s %-5s\n", "Имя", "Фамилия", "Год", "Пол", "Рост");
+    for (int i = 0; i < count; i++)
+        printf("%-15s %-15s %-6d %-8s %.2f\n",
+            people[i].first_name, people[i].last_name,
+            people[i].birth_year, people[i].gender, people[i].height);
+    return 0;
+}
