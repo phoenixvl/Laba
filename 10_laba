@@ -1,94 +1,40 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <float.h>
+#include <stdlib.h>
 
-#define MAX_NUMBERS 256
+// Макрос для нахождения максимального числа в массиве
+#define MAX_NUMBERS(arr, n) ({ \
+    int max = arr[0]; \
+    for(int i = 1; i < n; i++) { \
+        if(arr[i] > max) max = arr[i]; \
+    } \
+    max; \
+})
 
-/* ─── Макрос поиска максимума ────────────────────────────────────────────────
- *
- * Параметры:
- *   arr   — массив double
- *   n     — количество элементов
- *   out   — переменная, в которую записывается результат
- *
- * Макрос разворачивается в блок { ... }, поэтому его можно использовать
- * как обычный оператор. Внутри объявляется вспомогательная переменная
- * _i (с префиксом, чтобы не конфликтовать с внешними именами).
- * ─────────────────────────────────────────────────────────────────────────── */
-#define FIND_MAX(arr, n, out)               \
-do {                                        \
-    (out) = (arr)[0];                       \
-    for (int _i = 1; _i < (n); _i++) {     \
-        if ((arr)[_i] > (out))              \
-            (out) = (arr)[_i];              \
-    }                                       \
-} while (0)
-
-/* ─── Разбор строки в массив чисел ──────────────────────────────────────── */
-/* Разделители: пробел, запятая, точка с запятой, табуляция               */
-#define DELIMITERS " ,;\t"
-
-static int parse_numbers(char *str, double arr[], int max_count) {
+int main() {
+    char input[1000];
+    int numbers[100];
     int count = 0;
-    char *tok = strtok(str, DELIMITERS);
-    while (tok && count < max_count) {
-        char *endptr;
-        double val = strtod(tok, &endptr);
-        if (endptr == tok || *endptr != '\0') {
-            fprintf(stderr, "Предупреждение: \"%s\" не является числом, пропущено\n", tok);
-        } else {
-            arr[count++] = val;
-        }
-        tok = strtok(NULL, DELIMITERS);
+    
+    printf("Введите числа через пробел: ");
+    fgets(input, sizeof(input), stdin);
+    
+    // Разбиваем строку на числа
+    char *token = strtok(input, " \n");
+    while(token != NULL && count < 100) {
+        numbers[count++] = atoi(token);
+        token = strtok(NULL, " \n");
     }
-    return count;
-}
-
-/* ─── Красивый вывод числа (без лишних нулей) ────────────────────────────── */
-static void print_number(double v) {
-    if (v == (long long)v)
-        printf("%lld", (long long)v);
-    else
-        printf("%g", v);
-}
-
-/* ─── main ───────────────────────────────────────────────────────────────── */
-int main(void) {
-    char   input[4096];
-    double numbers[MAX_NUMBERS];
-
-    printf("Введите числа в одну строку (разделители: пробел, запятая, ';'):\n> ");
-
-    if (!fgets(input, sizeof(input), stdin)) {
-        fprintf(stderr, "Ошибка чтения\n");
+    
+    if(count == 0) {
+        printf("Числа не введены!\n");
         return 1;
     }
-    input[strcspn(input, "\n")] = '\0';   /* убираем '\n' */
-
-    int count = parse_numbers(input, numbers, MAX_NUMBERS);
-
-    if (count == 0) {
-        fprintf(stderr, "Ошибка: числа не найдены\n");
-        return 1;
-    }
-
-    /* Вывод распознанных чисел */
-    printf("\nРаспознано чисел: %d\n", count);
-    printf("Числа: ");
-    for (int i = 0; i < count; i++) {
-        print_number(numbers[i]);
-        if (i < count - 1) printf(", ");
-    }
-    printf("\n");
-
-    /* ── Применяем макрос ── */
-    double maximum;
-    FIND_MAX(numbers, count, maximum);
-
-    printf("Максимум: ");
-    print_number(maximum);
-    printf("\n");
-
+    
+    // Вызываем макрос
+    int max = MAX_NUMBERS(numbers, count);
+    
+    printf("Максимальное число: %d\n", max);
+    
     return 0;
 }
