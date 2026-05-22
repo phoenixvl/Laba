@@ -1,40 +1,29 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
-// Макрос для нахождения максимального числа в массиве
-#define MAX_NUMBERS(arr, n) ({ \
-    int max = arr[0]; \
-    for(int i = 1; i < n; i++) { \
-        if(arr[i] > max) max = arr[i]; \
-    } \
-    max; \
+#define FIND_MAX(arr, n) ({   \
+long long max = (arr)[0];      \
+int i;                   \
+for (i = 1; i < (n); i++) \
+if ((arr)[i] > max)   \
+    max = (arr)[i];    \
+max;                     \
 })
 
 int main() {
-    char input[1000];
-    int numbers[100];
-    int count = 0;
-    
-    printf("Введите числа через пробел: ");
-    fgets(input, sizeof(input), stdin);
-    
-    // Разбиваем строку на числа
-    char *token = strtok(input, " \n");
-    while(token != NULL && count < 100) {
-        numbers[count++] = atoi(token);
-        token = strtok(NULL, " \n");
+    char line[1000];
+    long long nums[100];
+    int n = 0;
+    printf ("Numbers: ");
+    fgets(line, sizeof(line), stdin);
+    char *token = strtok(line, " ");
+    while (token != NULL) {
+        nums[n] = atoll(token);
+        n++;
+        token = strtok(NULL, " ");
     }
-    
-    if(count == 0) {
-        printf("Числа не введены!\n");
-        return 1;
-    }
-    
-    // Вызываем макрос
-    int max = MAX_NUMBERS(numbers, count);
-    
-    printf("Максимальное число: %d\n", max);
-    
+    long long maximum = FIND_MAX(nums, n);
+    printf("Max: %lld\n", maximum);
     return 0;
 }
