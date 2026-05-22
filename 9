@@ -3,27 +3,85 @@
 #include <string.h>
 
 int main() {
-    char str[256], *token;
-    double result = 0;
+    char buffer[100];
+    int j = 0;
+    char *token;
+    printf ("Number:");
+    fgets (buffer, 100, stdin);
+    char result [100];
+    for (int i = 0; i < strlen(buffer); i++) {
+        if (buffer[i] != ' ') {
+            result[j] = buffer[i];
+            j++;
+        }
+    }
+    result[j] = '\0';
+    printf("%s\n", result);
+    j = 0;
+    char result2 [100];
+    for (int i = 0; result [i] != '\0'; i++) {
+        if (result[i] == '-' && result[i + 1] == '-') {
+            result2[j] = '+';
+            j++;
+            i++;
+        }
+        else if (result[i] == '+' && result[i + 1] == '-') {
+            result2[j] = '-';
+            j++;
+            i++;
+        }
+        else {
+            result2[j] = result[i];
+            j++;
+        }
+    }
+    result2[j] = '\0';
+    printf("%s\n", result2);
+    char result3 [100];
+    if (result2[0] == '-') {
+        snprintf(result3, sizeof (result3), "0%s", result2);
+    }
+    else {
+        snprintf(result3, sizeof(result3), "%s", result2);
+    }
+    printf("%s\n", result3);
+    j = 0;
+    char result4 [1000];
+    for (int i = 0; result3[i] != '\0'; i++) {
+        if (result3[i] == '-') {
+            result4[j++] = ' ';
+            result4[j++] = '-';
+            result4[j++] = ' ';
+        }
+        else if (result3[i] == '+') {
+            result4[j++] = ' ';
+            result4[j++] = '+';
+            result4[j++] = ' ';
+        }
+        else {
+            result4[j] = result3[i];
+            j++;
+        }
+    }
+    result4[j] = '\0';
+    printf("%s\n", result4);
+    double total = 0;
     char op = '+';
-
-    printf("Numbers: ");
-    fgets(str, 256, stdin);
-
-    token = strtok(str, " \n");
-
+    token = strtok(result4, " ");
     while (token != NULL) {
-        if (token[0] == '+' || token[0] == '-') {
+        if (strlen(token) == 1 && (token[0] == '+' || token[0] == '-')) {
             op = token[0];
         } else {
-            if (op == '+')
-                result += atof(token);
-            else
-                result -= atof(token);
+            double num = atof(token);
+            if (op == '+') {
+                total = total + num;
+            } else {
+                total = total - num;
+            }
         }
-        token = strtok(NULL, " \n");
+        token = strtok(NULL, " ");
     }
 
-    printf("Результат: %g\n", result);
+    printf("Result: %.2f\n", total);
     return 0;
 }
