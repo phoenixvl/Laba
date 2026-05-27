@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
+
+int day_of_week(int year, int month, int day) {
+    if (month <= 2) {
+        month += 12;
+        year--;
+    }
+    int exact;
+    int y = year % 100;
+    int c = year / 100;
+    exact = (day + (int)(2.6 * month - 0.2) + y + (y / 4) + (c / 4) - 2*c);
+    int result = ((exact % 7) + 7 + 2) % 7;
+    return result;
+}
+
+int main() {
+    time_t currentTime;
+    time(&currentTime);
+
+    char data[100];
+    int count = 0;
+    int year, month, day;
+
+    printf("Data: ");
+    scanf("%99s", data);
+
+    int len = strlen(data);
+
+    for (int i = 0; i < len; i++) {
+        if (data[i] == '.') {
+            count++;
+        }
+    }
+
+    //printf("Количество точек: %d\n", count);
+    if (strcmp(data, "now") == 0) {
+        printf("Current time: %s", ctime(&currentTime));    }
+        else if (count == 1) {
+            sscanf (data, "%d.%d", &year, &month);
+            if (month < 1 || month > 12) {
+                printf("Invalid month");
+            }
+                else {
+                    printf("Month: %d", month);
+                }
+        }
+        else if (count == 2) {
+            sscanf(data, "%d.%d.%d", &year, &month, &day);
+            if (day < 1 || day > 31 || month < 1 || month > 12) {
+                printf("Invalid data");
+            }
+            else {
+                int result = day_of_week(year, month, day);
+                char *days[] = {"Воскресенье", "Понедельник", "Вторник",
+                "Среда", "Четверг", "Пятница", "Суббота"};
+                printf("День недели: %s\n", days[result]);
+            }
+        }
+        else if (count == 0) {
+            sscanf (data, "%d", &year);
+            printf("Year: %d", year);
+        }
+    return 0;
+}
