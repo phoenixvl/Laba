@@ -1,0 +1,38 @@
+#include <signal.h>
+#include <stdio.h>
+void handler(int sig) {
+    switch (sig) {
+        case SIGABRT: printf ("Signal received by SIGABRT\n"); break;
+        case SIGFPE: printf ("Signal received by SIGFPE\n"); break;
+        case SIGILL: printf ("Signal received by SIGILL\n"); break;
+        case SIGINT: printf ("Signal received by SIGINT\n"); break;
+        case SIGSEGV: printf ("Signal received by SIGSEGV\n"); break;
+        case SIGTERM: printf ("Signal received by SIGTERM\n"); break;
+    }
+}
+
+int main() {
+    int choice;
+    signal(SIGABRT, handler);
+    signal(SIGFPE, handler);
+    signal(SIGILL, handler);
+    signal(SIGINT, handler);
+    signal(SIGSEGV, handler);
+    signal(SIGTERM, handler);
+    printf ("1 - SIGABRT\n"); //Аварийное завершение
+    printf ("2 - SIGFPE\n"); // Ошибка арифметики
+    printf ("3 - SIGILL\n"); // Недопустимая инструкция
+    printf ("4 - SIGINT\n"); // Прерывание  (Ctrl + c)
+    printf ("5 - SIGSEGV\n"); // Ошибка сегментации
+    printf ("6 - SIGTERM\n"); //Запрос завершения
+    scanf("%d", &choice);
+    switch (choice) {
+            case 1: raise(SIGABRT); break;
+            case 2: raise(SIGFPE); break;
+            case 3: raise(SIGILL); break;
+            case 4: raise(SIGINT); break;
+            case 5: raise(SIGSEGV); break;
+            case 6: raise(SIGTERM); break;
+    }
+    return 0;
+}
