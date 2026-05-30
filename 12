@@ -2,23 +2,23 @@
 #include <string.h>
 #include <time.h>
 
+
 int day_of_week(int year, int month, int day) {
-  if (month <= 2) {
-    month += 12;
-    year--;
+  struct tm t = {0};
+  t.tm_year = year - 1900;
+  t.tm_mon  = month - 1;
+  t.tm_mday = day;
+  mktime(&t);
+  return t.tm_wday;
   }
-  int exact;
-  int y = year % 100;
-  int c = year / 100;
-  exact = (day + (int)(2.6 * month - 0.2) + y + (y / 4) + (c / 4) - 2*c);
-  int result = ((exact % 7) + 7 + 2) % 7;
-  return result;
-}
+
 int days_in_month(int month, int year) {
-  int days[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-  if (month == 2 && (year % 400 == 0 || (year % 4 == 0 && year % 100 != 0)))
-    return 29;
-  return days[month - 1];
+  struct tm t = {0};
+  t.tm_year = year - 1900;
+  t.tm_mon = month;
+  t.tm_mday = 0;
+  mktime(&t);
+  return t.tm_mday;
 }
 
 char *month_names [] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
@@ -32,6 +32,7 @@ void printCalendar(int year)
     printf("%s\n", month_names[i]);
     printf("Mon Tue Wed Thu Fri Sat Sun\n");
     int k;
+    start = (start + 6) % 7;
     for (k = 0; k < start; k++)
       printf("     ");
     for (int j = 1; j <= total; j++) {
@@ -54,6 +55,7 @@ void printMonth (int year, int month) {
     printf("%s\n", month_names[month - 1 ]);
     printf("Mon Tue Wed Thu Fri Sat Sun\n");
     int k;
+  start = (start + 6) % 7;
     for (k = 0; k < start; k++)
       printf("     ");
     for (int j = 1; j <= total; j++) {
@@ -104,8 +106,8 @@ int main() {
     else {
       int result = day_of_week(year, month, day);
       char *days[] = {"Monday", "Tuesday", "Wednesday",
-      "Thursday", "Friday", "Saturday", "Sunday"};
-      printf("Day of week: %s\n", days[result]);
+      "Thursday", "Friday", "Saturday","Sunday"};
+      printf("Day of week: %s\n", days[(result + 6) % 7]);
     }
   }
   else if (count == 0) {
