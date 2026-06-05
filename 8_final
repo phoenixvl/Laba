@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct Person {
+    char name[50];
+    int year;
+    char gender;
+    float height;
+};
+
+int fields[4];
+int fcount = 0;
+
+int compare(const void *a, const void *b) {
+    const struct Person *pa = (const struct Person *)a;
+    const struct Person *pb = (const struct Person *)b;
+
+    for (int i = 0; i < fcount; i++) {
+        int res = 0;
+        if (fields[i] == 1) res = strcmp(pa->name, pb->name);
+        else if (fields[i] == 2) res = (pa->year - pb->year);
+        else if (fields[i] == 3) res = (pa->gender - pb->gender);
+        else if (fields[i] == 4) {
+            if (pa->height > pb->height) res = 1;
+            else if (pa->height < pb->height) res = -1;
+        }
+        if (res != 0) return res;
+    }
+    return 0;
+}
+
+int main() {
+    struct Person p[100];
+    char line[50];
+    FILE *f = fopen("person.txt", "r");
+    int n = 0;
+    while (fscanf(f, "%s %d %c %f", p[n].name, &p[n].year, &p[n].gender, &p[n].height) ==4) {
+        n++;
+    }
+    fclose(f);
+    printf ("Type of sort: 1 2 3 4\n");
+    fgets(line, sizeof(line), stdin);
+    char *token = strtok(line, ",");
+    while (token != NULL) {
+        fields[fcount] = atoi(token);
+        fcount++;
+        token = strtok(NULL, ",");
+    }
+    qsort(p, n, sizeof(struct Person), compare);
+    for (int i = 0; i < n; i++) {
+        printf("%s %d %c %.2f\n", p[i].name, p[i].year, p[i].gender, p[i].height);
+    }
+    return 0;
+}
